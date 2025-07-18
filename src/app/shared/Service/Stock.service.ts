@@ -7,7 +7,8 @@ import { HttpClient} from '@angular/common/http';
   providedIn: 'root'
 })
 export class StockService {
-  readonly API_URL = 'http://192.168.50.4:8090/api/stock';
+  // readonly API_URL = 'http://192.168.50.4:8090/api/stock';
+  readonly API_URL = '/api/stock';
 
   constructor(private httpClient: HttpClient) { }
 
