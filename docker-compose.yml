@@ -1,11 +1,9 @@
 version: '3.9'
 
-
 services:
   app:
     build: .
     ports:
-      - 443:443
-
-volumes:
-  - ./ssl:/etc/nginx/ssl
+      - "443:443"
+    volumes:
+      - ./ssl:/etc/nginx/ssl
