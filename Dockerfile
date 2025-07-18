@@ -10,5 +10,8 @@ RUN npm run build -- --output-path=./dist/out
 FROM nginx:1.25.1-alpine as runtime
 COPY --from=build /app/dist/out /usr/share/nginx/html
 COPY nginx-custom.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+COPY certs/selfsigned.crt /etc/nginx/ssl/selfsigned.crt
+COPY certs/selfsigned.key /etc/nginx/ssl/selfsigned.key
+
+EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
