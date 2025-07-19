@@ -9,6 +9,7 @@ import {ProductService} from '../shared/Service/Product.service';
   styleUrls: ['./products.component.css']
 })
 export class ProductsComponent implements OnInit {
+isEditMode: boolean = false;
 
   listProducts: any;
   form: boolean = false;
@@ -51,17 +52,22 @@ export class ProductsComponent implements OnInit {
     this.productService.deleteProduct(idProduct).subscribe(() => this.getAllProducts())
   }
 
-  open(content: any, action: any) {
-    if (action != null)
-      this.product = action
-    else
-      this.product = new Product();
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+open(content: any, action: any) {
+  if (action != null) {
+    this.product = {...action}; // clone to avoid two-way binding issues
+    this.isEditMode = true;
+  } else {
+    this.product = new Product();
+    this.isEditMode = false;
   }
+
+  this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    this.closeResult = Closed with: ${result};
+  }, (reason) => {
+    this.closeResult = Dismissed ${this.getDismissReason(reason)};
+  });
+}
+
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
@@ -69,11 +75,14 @@ export class ProductsComponent implements OnInit {
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
       return 'by clicking on a backdrop';
     } else {
-      return `with: ${reason}`;
+      return with: ${reason};
     }
   }
 
   cancel() {
     this.form = false;
   }
+
+
+
 }
