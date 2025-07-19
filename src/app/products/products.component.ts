@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Product } from '../shared/Model/Product';
-import { ProductService } from '../shared/Service/Product.service';
+import {Component, OnInit} from '@angular/core';
+import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Product} from '../shared/Model/Product';
+import {ProductService} from '../shared/Service/Product.service';
 
 @Component({
   selector: 'app-products',
@@ -14,9 +14,9 @@ export class ProductsComponent implements OnInit {
   form: boolean = false;
   product!: Product;
   closeResult!: string;
-  isEditMode: boolean = false;
 
-  constructor(private productService: ProductService, private modalService: NgbModal) { }
+  constructor(private productService: ProductService, private modalService: NgbModal) {
+  }
 
   ngOnInit(): void {
     this.getAllProducts();
@@ -28,6 +28,7 @@ export class ProductsComponent implements OnInit {
       prix: null,
       dateCreation: null,
       dateDerniereModification: null
+
     }
   }
 
@@ -35,18 +36,15 @@ export class ProductsComponent implements OnInit {
     this.productService.getAllProducts().subscribe(res => this.listProducts = res)
   }
 
-  addProduct(p: Product) {
+  addProduct(p: any) {
     this.productService.addProduct(p).subscribe(() => {
       this.getAllProducts();
       this.form = false;
     });
   }
 
-  editProduct(p: Product) {
-    this.productService.editProduct(p).subscribe(() => {
-      this.getAllProducts();
-      this.form = false;
-    });
+  editProduct(product: Product) {
+    this.productService.editProduct(product).subscribe();
   }
 
   deleteProduct(idProduct: any) {
@@ -54,22 +52,11 @@ export class ProductsComponent implements OnInit {
   }
 
   open(content: any, action: any) {
-    if (action != null) {
-      this.product = { ...action }; // clone to avoid two-way binding issues
-      this.isEditMode = true;
-    } else {
-      this.product = {
-        idProduit: null,
-        codeProduit: null,
-        libelleProduit: null,
-        prix: null,
-        dateCreation: null,
-        dateDerniereModification: null
-      };
-      this.isEditMode = false;
-    }
-
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+    if (action != null)
+      this.product = action
+    else
+      this.product = new Product();
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = Closed with: ${result};
     }, (reason) => {
       this.closeResult = Dismissed ${this.getDismissReason(reason)};
